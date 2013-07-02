@@ -41,12 +41,6 @@ public class Hoams extends JavaPlugin {
 		setHomeCommand = new SetHomeCommand(this);
 		
 		reload();
-
-		//home
-		//sethome
-		//home set
-		//home <player>
-		//home set <player>
 	}
 	
 	@Override
