@@ -1,0 +1,70 @@
+name: Hoams
+version: 0.2.5
+description: You want to go home? I gotcha.
+author: MrZoraman
+main: com.mrz.dyndns.server.Hoams.Hoams
+commands:
+  home:
+  sethome:
+permissions:
+  hoams.gohome:
+    default: op
+    description: Allows one to go to their home
+  hoams.sethome:
+    default: op
+    description: Allows one to set their home
+  hoams.reload:
+    default: op
+    description: Allows one to reload the hoams config file
+  hoams.respawnhome:
+    default: op
+    description: Allows one to respawn at their home if they die and it's enabled in the configuration
+  hoams.set.self:
+    default: op
+    description: Allows one to set their home
+  hoams.set.other:
+    default: op
+    description: Allows one to set someone else's home
+  hoams.gohome.self:
+    default: op
+    description: Allows one to go to their home
+  hoams.gohome.other:
+    default: op
+    description: Allows one to go to someone else's home
+  hoams.help:
+    default: op
+    description: Allows one to view the hoams help
+  hoams.immune:
+    default: op
+    description: Players with this permission can only have their homes set by themselves or players with the hoams.override permission
+  hoams.override:
+    default: op
+    description: Players with this permission can set the homes of players with the hoams.immune permission
+  hoams.user:
+    default: op
+    description: Gives standard hoams permissions
+    children:
+      hoams.help: true
+      hoams.set.self: true
+      hoams.gohome.self: true
+      hoams.respawnhome: true
+  hoams.admin:
+    default: op
+    description: Gives administrative hoams permissions
+    children:
+      hoams.help: true
+      hoams.respawnhome: true
+      hoams.set.other: true
+      hoams.set.self: true
+      hoams.gohome.self: true
+      hoams.gohome.other: true
+      hoams.help: true
+      hoams.immune: true
+  hoams.*:
+    default: op
+    description: Gives all hoams permissions
+    children:
+      hoams.admin: true
+      hoams.reload: true
+      hoams.override: true
+      
