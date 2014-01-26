@@ -143,8 +143,6 @@ public class Hoams extends JavaPlugin
 						if(result.getLoadFailureType().equals(LoadFailureType.NONE))
 						{
 							event.setRespawnLocation(result.getHome());
-							useSetHome = getConfig().getBoolean("Use_Sethome");
-							goHomeOnDeath = getConfig().getBoolean("Go_home_on_death");
 						}
 					}
 				}
