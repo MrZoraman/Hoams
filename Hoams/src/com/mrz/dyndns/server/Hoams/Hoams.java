@@ -99,7 +99,7 @@ public class Hoams extends JavaPlugin
 			{
 				if(CAN_SEE_HELP.verify(sender))
 				{
-					sender.sendMessage(ChatColor.YELLOW + "Homes help");
+					sender.sendMessage(ChatColor.GOLD + "-----Homes help-----");
 					if(CAN_GO_HOME.verify(sender))
 						sender.sendMessage(ChatColor.DARK_AQUA + "/home " + ChatColor.GOLD + "-" + ChatColor.AQUA + " Takes you to your home");
 					
