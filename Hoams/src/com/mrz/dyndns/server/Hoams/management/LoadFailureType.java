@@ -1,5 +1,10 @@
 package com.mrz.dyndns.server.Hoams.management;
 
+/**
+ * If shit's gonna hit the fan, I wanna know why!
+ * @author Zora
+ *
+ */
 public enum LoadFailureType 
 {
 	/**
