@@ -142,7 +142,6 @@ public class Hoams extends JavaPlugin
 						HomeResult result = homeManager.loadHome(player);
 						if(result.getLoadFailureType().equals(LoadFailureType.NONE))
 						{
-							System.out.println("Sending player home");
 							event.setRespawnLocation(result.getHome());
 						}
 					}
