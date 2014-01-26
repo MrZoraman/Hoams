@@ -9,15 +9,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.mrz.dyndns.server.CommandSystem.CommandSystem;
-import com.mrz.dyndns.server.CommandSystem.SimpleCommand;
+import com.mrz.dyndns.server.EnhancedCommandSystem.CommandSystem;
+import com.mrz.dyndns.server.EnhancedCommandSystem.SimpleCommand;
 import com.mrz.dyndns.server.Hoams.commands.*;
 import com.mrz.dyndns.server.Hoams.management.HomeManager;
 import com.mrz.dyndns.server.Hoams.management.HomeResult;
 import com.mrz.dyndns.server.Hoams.management.LoadFailureType;
 
-public class Hoams extends JavaPlugin {
-	
+public class Hoams extends JavaPlugin 
+{
 	private CommandSystem cs;
 	private HomeManager homeManager;
 	
@@ -28,7 +28,8 @@ public class Hoams extends JavaPlugin {
 	private SetHomeCommand setHomeCommand;
 	
 	@Override
-	public void onEnable() {
+	public void onEnable() 
+	{
 		getConfig().options().copyDefaults(true);
 		saveConfig();
 		
@@ -44,14 +45,17 @@ public class Hoams extends JavaPlugin {
 	}
 	
 	@Override
-	public void onDisable() {
+	public void onDisable() 
+	{
 	}
 	
-	public HomeManager getHomeManager() {
+	public HomeManager getHomeManager() 
+	{
 		return homeManager;
 	}
 	
-	public void reload() {
+	public void reload() 
+	{
 		cs.close();
 		PlayerRespawnEvent.getHandlerList().unregister(this);
 		reloadConfig();
@@ -65,26 +69,35 @@ public class Hoams extends JavaPlugin {
 		if(useSetHome)
 			cs.registerCommand("sethome", setHomeCommand);
 		
-		cs.registerCommand("home reload", new SimpleCommand() {
+		cs.registerCommand("home reload", new SimpleCommand() 
+		{
 			@Override
-			public boolean Execute(String commandName, CommandSender sender, List<String> args) {
-				if(sender.hasPermission("hoams.reload")) {
+			public boolean Execute(String commandName, CommandSender sender, List<String> args, List<String> variables)
+			{
+				if(sender.hasPermission("hoams.reload")) 
+				{
 					reload();
 					sender.sendMessage(ChatColor.GREEN + "Homes reloaded");
-					if(sender instanceof org.bukkit.entity.Player) {
+					if(sender instanceof org.bukkit.entity.Player) 
+					{
 						getLogger().info("Homes reloaded");
 					}
-				} else {
+				} 
+				else 
+				{
 					sender.sendMessage(ChatColor.RED + "You don't have permission to do that!");
 				}
 				return true;
 			}
 		});
 		
-		cs.registerCommand("home help", new SimpleCommand() {
+		cs.registerCommand("home help", new SimpleCommand() 
+		{
 			@Override
-			public boolean Execute(String commandName, CommandSender sender, List<String> args) {
-				if(sender.hasPermission("hoams.help")) {
+			public boolean Execute(String commandName, CommandSender sender, List<String> args, List<String> variables) 
+			{
+				if(sender.hasPermission("hoams.help")) 
+				{
 					sender.sendMessage(ChatColor.YELLOW + "Homes help");
 					if(sender.hasPermission("hoams.gohome") || sender.hasPermission("hoams.gohome.self"))
 						sender.sendMessage(ChatColor.DARK_AQUA + "/home " + ChatColor.GOLD + "-" + ChatColor.AQUA + " Takes you to your home");
@@ -101,23 +114,31 @@ public class Hoams extends JavaPlugin {
 					if(sender.hasPermission("hoams.reload"))
 						sender.sendMessage(ChatColor.DARK_AQUA + "/home reload " + ChatColor.GOLD + "-" + ChatColor.AQUA + " Reloads homes file");
 					
-					if(!(sender instanceof org.bukkit.entity.Player)) {
+					if(!(sender instanceof org.bukkit.entity.Player)) 
+					{
 						sender.sendMessage(ChatColor.RED + "NOTICE: You are not a player so the only command you can use is " + ChatColor.DARK_AQUA + "/home reload" + ChatColor.RED + "!");
 					}
-				} else {
+				} 
+				else 
+				{
 					sender.sendMessage(ChatColor.RED + "You don't have permission to do that!"); 
 				}
 				return true;
 			}
 		});
 		
-		if(goHomeOnDeath) {
-			this.getServer().getPluginManager().registerEvents(new Listener() {
+		if(goHomeOnDeath) 
+		{
+			this.getServer().getPluginManager().registerEvents(new Listener() 
+			{
 				@EventHandler
-				public void onPlayerRespawn(PlayerRespawnEvent event) {
-					if(event.getPlayer().hasPermission("hoams.respawnhome")) {
+				public void onPlayerRespawn(PlayerRespawnEvent event) 
+				{
+					if(event.getPlayer().hasPermission("hoams.respawnhome"))
+					{
 						HomeResult result = homeManager.loadHome(event.getPlayer());
-						if(result.getLoadFailureType().equals(LoadFailureType.NONE)){
+						if(result.getLoadFailureType().equals(LoadFailureType.NONE))
+						{
 							event.setRespawnLocation(result.getHome());
 							useSetHome = getConfig().getBoolean("Use_Sethome");
 							goHomeOnDeath = getConfig().getBoolean("Go_home_on_death");

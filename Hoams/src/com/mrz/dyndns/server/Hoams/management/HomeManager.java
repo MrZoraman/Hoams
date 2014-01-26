@@ -7,14 +7,17 @@ import org.bukkit.entity.Player;
 
 import com.mrz.dyndns.server.Hoams.Hoams;
 
-public class HomeManager {
-	public HomeManager(Hoams plugin) {
+public class HomeManager
+{
+	public HomeManager(Hoams plugin)
+	{
 		this.plugin = plugin;
 	}
-	
+
 	private Hoams plugin;
-	
-	public void saveHome(Player player) {
+
+	public void saveHome(Player player)
+	{
 		Location loc = player.getLocation();
 		plugin.getConfig().set("Homes." + player.getName() + ".World", loc.getWorld().getName());
 		plugin.getConfig().set("Homes." + player.getName() + ".X", loc.getX());
@@ -24,8 +27,9 @@ public class HomeManager {
 		plugin.getConfig().set("Homes." + player.getName() + ".Pitch", loc.getPitch());
 		plugin.saveConfig();
 	}
-	
-	public void saveHome(Player player, Location loc) {
+
+	public void saveHome(Player player, Location loc)
+	{
 		plugin.getConfig().set("Homes." + player.getName() + ".World", loc.getWorld().getName());
 		plugin.getConfig().set("Homes." + player.getName() + ".X", loc.getX());
 		plugin.getConfig().set("Homes." + player.getName() + ".Y", loc.getY());
@@ -34,28 +38,35 @@ public class HomeManager {
 		plugin.getConfig().set("Homes." + player.getName() + ".Pitch", loc.getPitch());
 		plugin.saveConfig();
 	}
-	
-	public HomeResult loadHome(Player player) {
-		if(homeExists(player)) {
+
+	public HomeResult loadHome(Player player)
+	{
+		if (homeExists(player))
+		{
 			World world = Bukkit.getWorld(plugin.getConfig().getString("Homes." + player.getName() + ".World"));
-			if(world == null) {
+			if (world == null)
+			{
 				return new HomeResult(LoadFailureType.NO_MAP, null);
-			} else {
-				Location loc = new Location(world,
-						plugin.getConfig().getDouble("Homes." + player.getName() + ".X"),
-						plugin.getConfig().getDouble("Homes." + player.getName() + ".Y"),
-						plugin.getConfig().getDouble("Homes." + player.getName() + ".Z"),
-						(float)plugin.getConfig().getDouble("Homes." + player.getName() + ".Yaw"),
-						(float)plugin.getConfig().getDouble("Homes." + player.getName() + ".Pitch"));
+			}
+			else
+			{
+				Location loc = new Location(world, 
+						plugin.getConfig().getDouble("Homes." + player.getName() + ".X"), 
+						plugin.getConfig().getDouble("Homes." + player.getName() + ".Y"), 
+						plugin.getConfig().getDouble("Homes." + player.getName() + ".Z"), 
+						(float) plugin.getConfig().getDouble("Homes." + player.getName() + ".Yaw"), 
+						(float) plugin.getConfig().getDouble("Homes." + player.getName() + ".Pitch"));
 				return new HomeResult(LoadFailureType.NONE, loc);
 			}
-		} else {
+		}
+		else
+		{
 			return new HomeResult(LoadFailureType.NO_HOME, null);
 		}
 	}
-	
 
-	public boolean homeExists(Player player) {
+	public boolean homeExists(Player player)
+	{
 		return plugin.getConfig().contains("Homes." + player.getName() + ".World");
 	}
 }
