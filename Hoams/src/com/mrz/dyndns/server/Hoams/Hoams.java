@@ -137,11 +137,12 @@ public class Hoams extends JavaPlugin
 				{
 					final org.bukkit.entity.Player player = event.getPlayer();
 					
-					if(WILL_RESPAWN_HOME.verify(player));
+					if(WILL_RESPAWN_HOME.verify(player))
 					{
 						HomeResult result = homeManager.loadHome(player);
 						if(result.getLoadFailureType().equals(LoadFailureType.NONE))
 						{
+							System.out.println("Sending player home");
 							event.setRespawnLocation(result.getHome());
 						}
 					}
