@@ -61,9 +61,10 @@ public class SetHomeCommand implements SimpleCommand
 				}
 				else
 				{
-					if (IS_IMMUNE.verify(sender) && !OVERRIDES.verify(sender))
+					if (IS_IMMUNE.verify(target) && !OVERRIDES.verify(sender))
 					{
-						player.sendMessage(ChatColor.RED + "You are not allowed to set this player's home!");
+						player.sendMessage(ChatColor.RED + "You are not allowed to set \'" + ChatColor.GOLD + target.getName() + 
+								(target.getName().endsWith("s") ? "\'" : "'s") + ChatColor.RED + "\' home!");
 						return true;
 					}
 					plugin.getHomeManager().saveHome(target, player.getLocation());
