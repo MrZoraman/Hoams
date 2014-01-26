@@ -16,6 +16,8 @@ import com.mrz.dyndns.server.Hoams.management.HomeManager;
 import com.mrz.dyndns.server.Hoams.management.HomeResult;
 import com.mrz.dyndns.server.Hoams.management.LoadFailureType;
 
+import static com.mrz.dyndns.server.Hoams.Permissions.*;
+
 public class Hoams extends JavaPlugin 
 {
 	private CommandSystem cs;
@@ -32,7 +34,6 @@ public class Hoams extends JavaPlugin
 	{
 		getConfig().options().copyDefaults(true);
 		saveConfig();
-		
 		
 		homeManager = new HomeManager(this);
 		
@@ -74,7 +75,7 @@ public class Hoams extends JavaPlugin
 			@Override
 			public boolean Execute(String commandName, CommandSender sender, List<String> args, List<String> variables)
 			{
-				if(sender.hasPermission("hoams.reload")) 
+				if(CAN_RELOAD.verify(sender))
 				{
 					reload();
 					sender.sendMessage(ChatColor.GREEN + "Homes reloaded");
@@ -96,22 +97,22 @@ public class Hoams extends JavaPlugin
 			@Override
 			public boolean Execute(String commandName, CommandSender sender, List<String> args, List<String> variables) 
 			{
-				if(sender.hasPermission("hoams.help")) 
+				if(CAN_SEE_HELP.verify(sender))
 				{
 					sender.sendMessage(ChatColor.YELLOW + "Homes help");
-					if(sender.hasPermission("hoams.gohome") || sender.hasPermission("hoams.gohome.self"))
+					if(CAN_GO_HOME.verify(sender))
 						sender.sendMessage(ChatColor.DARK_AQUA + "/home " + ChatColor.GOLD + "-" + ChatColor.AQUA + " Takes you to your home");
 					
-					if(sender.hasPermission("hoams.sethome") || sender.hasPermission("hoams.set.self"))
+					if(CAN_SET_HOME.verify(sender))
 						sender.sendMessage(ChatColor.DARK_AQUA + "/home set " + (useSetHome ? ChatColor.AQUA + "or " + ChatColor.DARK_AQUA + "/sethome " : "") + ChatColor.GOLD + "-" + ChatColor.AQUA + " Sets your home");
 					
-					if(sender.hasPermission("hoams.gohome.other"))
+					if(CAN_GO_TO_OTHERS_HOME.verify(sender))
 						sender.sendMessage(ChatColor.DARK_AQUA + "/home [PlayerName] " + ChatColor.GOLD + "-" + ChatColor.AQUA + " Takes you to a player's home");
 					
-					if(sender.hasPermission("hoams.set.other"))
+					if(CAN_SET_OTHERS_HOME.verify(sender))
 						sender.sendMessage(ChatColor.DARK_AQUA + "/home set [PlayerName] " + (useSetHome ? ChatColor.AQUA + "or " + ChatColor.DARK_AQUA + "/sethome [PlayerName] " : "") + ChatColor.GOLD + "-" + ChatColor.AQUA + " Sets a player's home");
 					
-					if(sender.hasPermission("hoams.reload"))
+					if(CAN_RELOAD.verify(sender))
 						sender.sendMessage(ChatColor.DARK_AQUA + "/home reload " + ChatColor.GOLD + "-" + ChatColor.AQUA + " Reloads homes file");
 					
 					if(!(sender instanceof org.bukkit.entity.Player)) 
@@ -134,9 +135,11 @@ public class Hoams extends JavaPlugin
 				@EventHandler
 				public void onPlayerRespawn(PlayerRespawnEvent event) 
 				{
-					if(event.getPlayer().hasPermission("hoams.respawnhome"))
+					final org.bukkit.entity.Player player = event.getPlayer();
+					
+					if(WILL_RESPAWN_HOME.verify(player));
 					{
-						HomeResult result = homeManager.loadHome(event.getPlayer());
+						HomeResult result = homeManager.loadHome(player);
 						if(result.getLoadFailureType().equals(LoadFailureType.NONE))
 						{
 							event.setRespawnLocation(result.getHome());

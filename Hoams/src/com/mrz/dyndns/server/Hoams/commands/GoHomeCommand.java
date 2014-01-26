@@ -11,6 +11,8 @@ import com.mrz.dyndns.server.EnhancedCommandSystem.SimpleCommand;
 import com.mrz.dyndns.server.Hoams.Hoams;
 import com.mrz.dyndns.server.Hoams.management.HomeResult;
 
+import static com.mrz.dyndns.server.Hoams.Permissions.*;
+
 public class GoHomeCommand implements SimpleCommand 
 {
 	public GoHomeCommand(Hoams plugin) 
@@ -36,7 +38,7 @@ public class GoHomeCommand implements SimpleCommand
 		
 		if(args.size() == 0) 
 		{
-			if(player.hasPermission("hoams.gohome.self") || player.hasPermission("hoams.gohome")) 
+			if(CAN_GO_HOME.verify(sender))
 			{
 				HomeResult result = plugin.getHomeManager().loadHome(player);
 				switch(result.getLoadFailureType()) 
@@ -46,9 +48,10 @@ public class GoHomeCommand implements SimpleCommand
 					return true;
 				case NO_HOME:
 					player.sendMessage(ChatColor.RED + "You don't have a home set!");
-					if(player.hasPermission("hoams.set.self")) 
+					if(CAN_SET_HOME.verify(sender))
 					{
-						player.sendMessage(ChatColor.AQUA + "Use " + ChatColor.DARK_AQUA + "/home set" + ChatColor.AQUA + " or " + ChatColor.DARK_AQUA + "/sethome" + ChatColor.AQUA + " to set your home.");
+						player.sendMessage(ChatColor.AQUA + "Use " + ChatColor.DARK_AQUA + "/home set" + ChatColor.AQUA + " or " 
+								+ ChatColor.DARK_AQUA + "/sethome" + ChatColor.AQUA + " to set your home.");
 					}
 					return true;
 				case NO_MAP:
@@ -66,7 +69,7 @@ public class GoHomeCommand implements SimpleCommand
 		} 
 		else 
 		{
-			if(player.hasPermission("hoams.gohome.other")) 
+			if(CAN_GO_TO_OTHERS_HOME.verify(sender))
 			{
 				Player target = Bukkit.getPlayer(args.get(0));
 				if(target == null) 
@@ -83,13 +86,16 @@ public class GoHomeCommand implements SimpleCommand
 						return true;
 					case NO_HOME:
 						player.sendMessage(ChatColor.GOLD + target.getName() + ChatColor.RED + " doesn't have a home set!");
-						if(player.hasPermission("hoams.set.other")) 
+						if(CAN_SET_OTHERS_HOME.verify(sender))
 						{
-							player.sendMessage(ChatColor.AQUA + "Use " + ChatColor.DARK_AQUA + "/home set " + target.getName() + ChatColor.AQUA + " or " + ChatColor.DARK_AQUA + "/sethome " + target.getName() + ChatColor.AQUA + " to set " + ChatColor.GOLD + target.getName() + ChatColor.AQUA + "'s home.");
+							player.sendMessage(ChatColor.AQUA + "Use " + ChatColor.DARK_AQUA + "/home set " + target.getName() 
+									+ ChatColor.AQUA + " or " + ChatColor.DARK_AQUA + "/sethome " + target.getName() + ChatColor.AQUA 
+									+ " to set " + ChatColor.GOLD + target.getName() + ChatColor.AQUA + "'s home.");
 						}
 						return true;
 					case NO_MAP:
-						player.sendMessage(ChatColor.RED + "That world that " + ChatColor.GOLD + target.getName() + ChatColor.RED + " is in either isn't loaded by the server or no longer exists :(");
+						player.sendMessage(ChatColor.RED + "That world that " + ChatColor.GOLD + target.getName() + ChatColor.RED 
+								+ " is in either isn't loaded by the server or no longer exists :(");
 						return true;
 					default:
 						return true;

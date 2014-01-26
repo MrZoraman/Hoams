@@ -10,6 +10,8 @@ import org.bukkit.entity.Player;
 import com.mrz.dyndns.server.EnhancedCommandSystem.SimpleCommand;
 import com.mrz.dyndns.server.Hoams.Hoams;
 
+import static com.mrz.dyndns.server.Hoams.Permissions.*;
+
 public class SetHomeCommand implements SimpleCommand
 {
 	public SetHomeCommand(Hoams plugin)
@@ -35,7 +37,7 @@ public class SetHomeCommand implements SimpleCommand
 
 		if (args.size() == 0)
 		{
-			if (player.hasPermission("hoams.set.self") || player.hasPermission("hoams.sethome"))
+			if (CAN_SET_HOME.verify(sender))
 			{
 				plugin.getHomeManager().saveHome(player);
 				player.sendMessage(ChatColor.GREEN + "Home set!");
@@ -49,7 +51,7 @@ public class SetHomeCommand implements SimpleCommand
 		}
 		else
 		{
-			if (player.hasPermission("hoams.set.other"))
+			if (CAN_SET_OTHERS_HOME.verify(sender))
 			{
 				Player target = Bukkit.getPlayer(args.get(0));
 				if (target == null)
@@ -59,7 +61,7 @@ public class SetHomeCommand implements SimpleCommand
 				}
 				else
 				{
-					if (target.hasPermission("hoams.immune") && !player.hasPermission("hoams.override"))
+					if (IS_IMMUNE.verify(sender) && !OVERRIDES.verify(sender))
 					{
 						player.sendMessage(ChatColor.RED + "You are not allowed to set this player's home!");
 						return true;

@@ -7,6 +7,8 @@ import org.bukkit.entity.Player;
 
 import com.mrz.dyndns.server.Hoams.Hoams;
 
+import static com.mrz.dyndns.server.Hoams.management.LoadFailureType.*;
+
 public class HomeManager
 {
 	public HomeManager(Hoams plugin)
@@ -46,7 +48,7 @@ public class HomeManager
 			World world = Bukkit.getWorld(plugin.getConfig().getString("Homes." + player.getName() + ".World"));
 			if (world == null)
 			{
-				return new HomeResult(LoadFailureType.NO_MAP, null);
+				return new HomeResult(NO_MAP, null);
 			}
 			else
 			{
@@ -56,12 +58,12 @@ public class HomeManager
 						plugin.getConfig().getDouble("Homes." + player.getName() + ".Z"), 
 						(float) plugin.getConfig().getDouble("Homes." + player.getName() + ".Yaw"), 
 						(float) plugin.getConfig().getDouble("Homes." + player.getName() + ".Pitch"));
-				return new HomeResult(LoadFailureType.NONE, loc);
+				return new HomeResult(NONE, loc);
 			}
 		}
 		else
 		{
-			return new HomeResult(LoadFailureType.NO_HOME, null);
+			return new HomeResult(NO_HOME, null);
 		}
 	}
 
