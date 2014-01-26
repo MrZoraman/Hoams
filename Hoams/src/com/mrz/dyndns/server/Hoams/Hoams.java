@@ -139,7 +139,7 @@ public class Hoams extends JavaPlugin
 					
 					if(WILL_RESPAWN_HOME.verify(player))
 					{
-						HomeResult result = homeManager.loadHome(player);
+						HomeResult result = homeManager.loadHome(player.getName());
 						if(result.getLoadFailureType().equals(LoadFailureType.NONE))
 						{
 							event.setRespawnLocation(result.getHome());

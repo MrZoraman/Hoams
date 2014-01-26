@@ -41,11 +41,11 @@ public class HomeManager
 		plugin.saveConfig();
 	}
 
-	public HomeResult loadHome(Player player)
+	public HomeResult loadHome(String playerName)
 	{
-		if (homeExists(player))
+		if (homeExists(playerName))
 		{
-			World world = Bukkit.getWorld(plugin.getConfig().getString("Homes." + player.getName() + ".World"));
+			World world = Bukkit.getWorld(plugin.getConfig().getString("Homes." + playerName + ".World"));
 			if (world == null)
 			{
 				return new HomeResult(NO_MAP, null);
@@ -53,11 +53,11 @@ public class HomeManager
 			else
 			{
 				Location loc = new Location(world, 
-						plugin.getConfig().getDouble("Homes." + player.getName() + ".X"), 
-						plugin.getConfig().getDouble("Homes." + player.getName() + ".Y"), 
-						plugin.getConfig().getDouble("Homes." + player.getName() + ".Z"), 
-						(float) plugin.getConfig().getDouble("Homes." + player.getName() + ".Yaw"), 
-						(float) plugin.getConfig().getDouble("Homes." + player.getName() + ".Pitch"));
+						plugin.getConfig().getDouble("Homes." + playerName + ".X"), 
+						plugin.getConfig().getDouble("Homes." + playerName + ".Y"), 
+						plugin.getConfig().getDouble("Homes." + playerName + ".Z"), 
+						(float) plugin.getConfig().getDouble("Homes." + playerName + ".Yaw"), 
+						(float) plugin.getConfig().getDouble("Homes." + playerName + ".Pitch"));
 				return new HomeResult(NONE, loc);
 			}
 		}
@@ -67,8 +67,8 @@ public class HomeManager
 		}
 	}
 
-	public boolean homeExists(Player player)
+	public boolean homeExists(String playerName)
 	{
-		return plugin.getConfig().contains("Homes." + player.getName() + ".World");
+		return plugin.getConfig().contains("Homes." + playerName + ".World");
 	}
 }
