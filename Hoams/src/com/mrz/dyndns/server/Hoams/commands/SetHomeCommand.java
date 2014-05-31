@@ -1,18 +1,19 @@
 package com.mrz.dyndns.server.Hoams.commands;
 
-import java.util.List;
+import static com.mrz.dyndns.server.Hoams.Permissions.CAN_SET_HOME;
+import static com.mrz.dyndns.server.Hoams.Permissions.CAN_SET_OTHERS_HOME;
+import static com.mrz.dyndns.server.Hoams.Permissions.IS_IMMUNE;
+import static com.mrz.dyndns.server.Hoams.Permissions.OVERRIDES;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.mrz.dyndns.server.EnhancedCommandSystem.SimpleCommand;
 import com.mrz.dyndns.server.Hoams.Hoams;
+import com.mrz.dyndns.server.Hoams.zorascommandsystem.bukkitcompat.CSBukkitCommand;
 
-import static com.mrz.dyndns.server.Hoams.Permissions.*;
-
-public class SetHomeCommand implements SimpleCommand
+public class SetHomeCommand implements CSBukkitCommand
 {
 	public SetHomeCommand(Hoams plugin)
 	{
@@ -22,9 +23,9 @@ public class SetHomeCommand implements SimpleCommand
 	private final Hoams plugin;
 
 	@Override
-	public boolean Execute(String commandName, CommandSender sender, List<String> args, List<String> variables)
+	public boolean execute(CommandSender sender, Player player, String cmdName, String[] preArgs, String[] args)
 	{
-		Player player = null;
+//		Player player = null;TODO
 		if (sender instanceof Player)
 		{
 			player = (Player) sender;
@@ -35,7 +36,7 @@ public class SetHomeCommand implements SimpleCommand
 			return true;
 		}
 
-		if (args.size() == 0)
+		if (args.length == 0)
 		{
 			if (CAN_SET_HOME.verify(sender))
 			{
@@ -53,10 +54,11 @@ public class SetHomeCommand implements SimpleCommand
 		{
 			if (CAN_SET_OTHERS_HOME.verify(sender))
 			{
-				Player target = Bukkit.getPlayer(args.get(0));
+				@SuppressWarnings("deprecation")//TODO
+				Player target = Bukkit.getPlayer(args[0]);
 				if (target == null)
 				{
-					player.sendMessage(ChatColor.RED + "Player '" + ChatColor.GOLD + args.get(0) + ChatColor.RED + "' is not online!");
+					player.sendMessage(ChatColor.RED + "Player '" + ChatColor.GOLD + args[0] + ChatColor.RED + "' is not online!");
 					return true;
 				}
 				else
@@ -68,7 +70,7 @@ public class SetHomeCommand implements SimpleCommand
 						return true;
 					}
 					plugin.getHomeManager().saveHome(target, player.getLocation());
-					player.sendMessage(ChatColor.GREEN + "Home for player '" + ChatColor.GOLD + args.get(0) + ChatColor.GREEN + "' set!");
+					player.sendMessage(ChatColor.GREEN + "Home for player '" + ChatColor.GOLD + args[0] + ChatColor.GREEN + "' set!");
 					target.sendMessage(ChatColor.GREEN + "Your home has been set!");
 					return true;
 				}

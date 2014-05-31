@@ -1,26 +1,25 @@
 package com.mrz.dyndns.server.Hoams;
 
-import java.util.List;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.mrz.dyndns.server.EnhancedCommandSystem.CommandSystem;
-import com.mrz.dyndns.server.EnhancedCommandSystem.SimpleCommand;
 import com.mrz.dyndns.server.Hoams.commands.*;
 import com.mrz.dyndns.server.Hoams.management.HomeManager;
 import com.mrz.dyndns.server.Hoams.management.HomeResult;
 import com.mrz.dyndns.server.Hoams.management.LoadFailureType;
+import com.mrz.dyndns.server.Hoams.zorascommandsystem.bukkitcompat.BukkitCommandSystem;
+import com.mrz.dyndns.server.Hoams.zorascommandsystem.bukkitcompat.CSBukkitCommand;
 
 import static com.mrz.dyndns.server.Hoams.Permissions.*;
 
 public class Hoams extends JavaPlugin 
 {
-	private CommandSystem cs;
+	private BukkitCommandSystem cs;
 	private HomeManager homeManager;
 	
 	private boolean useSetHome;
@@ -37,7 +36,7 @@ public class Hoams extends JavaPlugin
 		
 		homeManager = new HomeManager(this);
 		
-		cs = new CommandSystem(this);
+		cs = new BukkitCommandSystem(this);
 		
 		goHomeCommand = new GoHomeCommand(this);
 		setHomeCommand = new SetHomeCommand(this);
@@ -57,7 +56,6 @@ public class Hoams extends JavaPlugin
 	
 	public void reload() 
 	{
-		cs.close();
 		PlayerRespawnEvent.getHandlerList().unregister(this);
 		reloadConfig();
 		
@@ -70,10 +68,10 @@ public class Hoams extends JavaPlugin
 		if(useSetHome)
 			cs.registerCommand("sethome", setHomeCommand);
 		
-		cs.registerCommand("home reload", new SimpleCommand() 
+		cs.registerCommand("home reload", new CSBukkitCommand() 
 		{
 			@Override
-			public boolean Execute(String commandName, CommandSender sender, List<String> args, List<String> variables)
+			public boolean execute(CommandSender sender, Player player, String cmdName, String[] preArgs, String[] args)
 			{
 				if(CAN_RELOAD.verify(sender))
 				{
@@ -92,10 +90,10 @@ public class Hoams extends JavaPlugin
 			}
 		});
 		
-		cs.registerCommand("home help", new SimpleCommand() 
+		cs.registerCommand("home help", new CSBukkitCommand() 
 		{
 			@Override
-			public boolean Execute(String commandName, CommandSender sender, List<String> args, List<String> variables) 
+			public boolean execute(CommandSender sender, Player player, String cmdName, String[] preArgs, String[] args)
 			{
 				if(CAN_SEE_HELP.verify(sender))
 				{

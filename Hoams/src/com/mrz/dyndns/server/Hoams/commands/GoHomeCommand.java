@@ -1,18 +1,16 @@
 package com.mrz.dyndns.server.Hoams.commands;
 
-import java.util.List;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.mrz.dyndns.server.EnhancedCommandSystem.SimpleCommand;
 import com.mrz.dyndns.server.Hoams.Hoams;
 import com.mrz.dyndns.server.Hoams.management.HomeResult;
+import com.mrz.dyndns.server.Hoams.zorascommandsystem.bukkitcompat.CSBukkitCommand;
 
 import static com.mrz.dyndns.server.Hoams.Permissions.*;
 
-public class GoHomeCommand implements SimpleCommand 
+public class GoHomeCommand implements CSBukkitCommand 
 {
 	public GoHomeCommand(Hoams plugin) 
 	{
@@ -22,9 +20,9 @@ public class GoHomeCommand implements SimpleCommand
 	private final Hoams plugin;
 	
 	@Override
-	public boolean Execute(String commandName, CommandSender sender, List<String> args, List<String> variables)
+	public boolean execute(CommandSender sender, Player player, String cmdName, String[] preArgs, String[] args)
 	{
-		Player player = null;
+//		Player player = null;TODO
 		if(sender instanceof Player) 
 		{
 			player = (Player) sender;
@@ -35,7 +33,7 @@ public class GoHomeCommand implements SimpleCommand
 			return true;
 		}
 		
-		if(args.size() == 0) 
+		if(args.length == 0) 
 		{
 			if(CAN_GO_HOME.verify(sender))
 			{
@@ -70,7 +68,7 @@ public class GoHomeCommand implements SimpleCommand
 		{
 			if(CAN_GO_TO_OTHERS_HOME.verify(sender))
 			{
-				String targetName = args.get(0);
+				String targetName = args[0];
 				HomeResult result = plugin.getHomeManager().loadHome(targetName);
 				switch(result.getLoadFailureType()) {
 				case NONE:
