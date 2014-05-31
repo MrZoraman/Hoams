@@ -10,14 +10,7 @@ import com.mrz.dyndns.server.Hoams.zorascommandsystem.bukkitcompat.BukkitCommand
 
 public class Hoams extends JavaPlugin 
 {
-	private BukkitCommandSystem cs;
 	private HomeManager homeManager;
-	
-	private boolean useSetHome;
-	private boolean goHomeOnDeath;
-	
-	private GoHomeCommand goHomeCommand;
-	private SetHomeCommand setHomeCommand;
 	
 	@Override
 	public void onEnable() 
@@ -26,11 +19,6 @@ public class Hoams extends JavaPlugin
 		saveConfig();
 		
 		homeManager = new HomeManager(this);
-		
-		cs = new BukkitCommandSystem(this);
-		
-		goHomeCommand = new GoHomeCommand(this);
-		setHomeCommand = new SetHomeCommand(this);
 		
 		reload();
 	}
@@ -47,20 +35,26 @@ public class Hoams extends JavaPlugin
 	
 	public void reload() 
 	{
-		PlayerRespawnEvent.getHandlerList().unregister(this);
 		reloadConfig();
 		
-		useSetHome = getConfig().getBoolean("Use_Sethome");
-		goHomeOnDeath = getConfig().getBoolean("Go_home_on_death");
+		boolean useSetHome = getConfig().getBoolean("Use_Sethome");
+		boolean goHomeOnDeath = getConfig().getBoolean("Go_home_on_death");
 		
-		cs.registerCommand("home", goHomeCommand);
+		BukkitCommandSystem cs = new BukkitCommandSystem(this);
+		
+		SetHomeCommand setHomeCommand = new SetHomeCommand(this);
+		cs.registerCommand("home", new GoHomeCommand(this));
 		cs.registerCommand("home set", setHomeCommand);
 		
 		if(useSetHome)
+		{
 			cs.registerCommand("sethome", setHomeCommand);
+		}
 		
 		cs.registerCommand("home reload", new ReloadCommand(this));
 		cs.registerCommand("home help", new HelpCommand(useSetHome));
+
+		PlayerRespawnEvent.getHandlerList().unregister(this);
 		
 		if(goHomeOnDeath) 
 		{
