@@ -9,8 +9,6 @@ import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.mrz.dyndns.server.Hoams.Hoams;
-
 import static com.mrz.dyndns.server.Hoams.management.LoadFailureType.*;
 
 public class HomeManager
@@ -94,6 +92,17 @@ public class HomeManager
 				double yaw = config.getDouble("Homes." + key + ".Yaw");
 				double pitch = config.getDouble("Homes." + key + ".Pitch");
 				
+				//delete bad entry
+				config.set("Homes." + key + ".World", null);
+				config.set("Homes." + key + ".X", null);
+				config.set("Homes." + key + ".Y", null);
+				config.set("Homes." + key + ".Z", null);
+				config.set("Homes." + key + ".Yaw", null);
+				config.set("Homes." + key + ".Pitch", null);
+				config.set("Homes." + key, null);
+				
+				
+				plugin.saveConfig();
 			}
 		}
 	}

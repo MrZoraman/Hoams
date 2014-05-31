@@ -30,12 +30,12 @@ public class Hoams extends JavaPlugin
 	
 	public void reload() 
 	{
+		homeManager.convertToUuids();
 		reloadConfig();
 		
 		boolean useSetHome = getConfig().getBoolean("Use_Sethome");
 		boolean goHomeOnDeath = getConfig().getBoolean("Go_home_on_death");
 		
-		homeManager.convertToUuids();
 		
 		BukkitCommandSystem cs = new BukkitCommandSystem(this);
 		
