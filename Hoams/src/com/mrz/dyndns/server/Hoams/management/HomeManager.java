@@ -1,9 +1,10 @@
 package com.mrz.dyndns.server.Hoams.management;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
 
 import com.mrz.dyndns.server.Hoams.Hoams;
 
@@ -18,34 +19,35 @@ public class HomeManager
 
 	private Hoams plugin;
 
-	public void saveHome(Player player)
+//	public void saveHome(Player player)
+//	{
+//		UUID playerUuid = player.getUniqueId();
+//		Location loc = player.getLocation();
+//		plugin.getConfig().set("Homes." + playerUuid.toString() + ".World", loc.getWorld().getName());
+//		plugin.getConfig().set("Homes." + playerUuid.toString() + ".X", loc.getX());
+//		plugin.getConfig().set("Homes." + playerUuid.toString() + ".Y", loc.getY());
+//		plugin.getConfig().set("Homes." + playerUuid.toString() + ".Z", loc.getZ());
+//		plugin.getConfig().set("Homes." + playerUuid.toString() + ".Yaw", loc.getYaw());
+//		plugin.getConfig().set("Homes." + playerUuid.toString() + ".Pitch", loc.getPitch());
+//		plugin.saveConfig();
+//	}
+
+	public void saveHome(UUID playerUuid, Location loc)
 	{
-		Location loc = player.getLocation();
-		plugin.getConfig().set("Homes." + player.getName() + ".World", loc.getWorld().getName());
-		plugin.getConfig().set("Homes." + player.getName() + ".X", loc.getX());
-		plugin.getConfig().set("Homes." + player.getName() + ".Y", loc.getY());
-		plugin.getConfig().set("Homes." + player.getName() + ".Z", loc.getZ());
-		plugin.getConfig().set("Homes." + player.getName() + ".Yaw", loc.getYaw());
-		plugin.getConfig().set("Homes." + player.getName() + ".Pitch", loc.getPitch());
+		plugin.getConfig().set("Homes." + playerUuid.toString() + ".World", loc.getWorld().getName());
+		plugin.getConfig().set("Homes." + playerUuid.toString() + ".X", loc.getX());
+		plugin.getConfig().set("Homes." + playerUuid.toString() + ".Y", loc.getY());
+		plugin.getConfig().set("Homes." + playerUuid.toString() + ".Z", loc.getZ());
+		plugin.getConfig().set("Homes." + playerUuid.toString() + ".Yaw", loc.getYaw());
+		plugin.getConfig().set("Homes." + playerUuid.toString() + ".Pitch", loc.getPitch());
 		plugin.saveConfig();
 	}
 
-	public void saveHome(Player player, Location loc)
+	public HomeResult loadHome(UUID playerUuid)
 	{
-		plugin.getConfig().set("Homes." + player.getName() + ".World", loc.getWorld().getName());
-		plugin.getConfig().set("Homes." + player.getName() + ".X", loc.getX());
-		plugin.getConfig().set("Homes." + player.getName() + ".Y", loc.getY());
-		plugin.getConfig().set("Homes." + player.getName() + ".Z", loc.getZ());
-		plugin.getConfig().set("Homes." + player.getName() + ".Yaw", loc.getYaw());
-		plugin.getConfig().set("Homes." + player.getName() + ".Pitch", loc.getPitch());
-		plugin.saveConfig();
-	}
-
-	public HomeResult loadHome(String playerName)
-	{
-		if (homeExists(playerName))
+		if (homeExists(playerUuid))
 		{
-			World world = Bukkit.getWorld(plugin.getConfig().getString("Homes." + playerName + ".World"));
+			World world = Bukkit.getWorld(plugin.getConfig().getString("Homes." + playerUuid.toString() + ".World"));
 			if (world == null)
 			{
 				return new HomeResult(NO_MAP, null);
@@ -53,11 +55,11 @@ public class HomeManager
 			else
 			{
 				Location loc = new Location(world, 
-						plugin.getConfig().getDouble("Homes." + playerName + ".X"), 
-						plugin.getConfig().getDouble("Homes." + playerName + ".Y"), 
-						plugin.getConfig().getDouble("Homes." + playerName + ".Z"), 
-						(float) plugin.getConfig().getDouble("Homes." + playerName + ".Yaw"), 
-						(float) plugin.getConfig().getDouble("Homes." + playerName + ".Pitch"));
+						plugin.getConfig().getDouble("Homes." + playerUuid.toString() + ".X"), 
+						plugin.getConfig().getDouble("Homes." + playerUuid.toString() + ".Y"), 
+						plugin.getConfig().getDouble("Homes." + playerUuid.toString() + ".Z"), 
+						(float) plugin.getConfig().getDouble("Homes." + playerUuid.toString() + ".Yaw"), 
+						(float) plugin.getConfig().getDouble("Homes." + playerUuid.toString() + ".Pitch"));
 				return new HomeResult(NONE, loc);
 			}
 		}
@@ -67,8 +69,8 @@ public class HomeManager
 		}
 	}
 
-	public boolean homeExists(String playerName)
+	public boolean homeExists(UUID playerUuid)
 	{
-		return plugin.getConfig().contains("Homes." + playerName + ".World");
+		return plugin.getConfig().contains("Homes." + playerUuid.toString() + ".World");
 	}
 }
