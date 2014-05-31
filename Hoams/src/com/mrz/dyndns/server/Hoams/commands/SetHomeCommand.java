@@ -1,9 +1,6 @@
 package com.mrz.dyndns.server.Hoams.commands;
 
-import static com.mrz.dyndns.server.Hoams.Permissions.CAN_SET_HOME;
-import static com.mrz.dyndns.server.Hoams.Permissions.CAN_SET_OTHERS_HOME;
-import static com.mrz.dyndns.server.Hoams.Permissions.IS_IMMUNE;
-import static com.mrz.dyndns.server.Hoams.Permissions.OVERRIDES;
+import static com.mrz.dyndns.server.Hoams.Permissions.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
