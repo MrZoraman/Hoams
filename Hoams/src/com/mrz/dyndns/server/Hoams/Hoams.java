@@ -23,11 +23,6 @@ public class Hoams extends JavaPlugin
 		reload();
 	}
 	
-	@Override
-	public void onDisable() 
-	{
-	}
-	
 	public HomeManager getHomeManager() 
 	{
 		return homeManager;
