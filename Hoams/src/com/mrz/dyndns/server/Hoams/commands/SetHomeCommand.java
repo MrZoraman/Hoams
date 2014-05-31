@@ -25,12 +25,7 @@ public class SetHomeCommand implements CSBukkitCommand
 	@Override
 	public boolean execute(CommandSender sender, Player player, String cmdName, String[] preArgs, String[] args)
 	{
-//		Player player = null;TODO
-		if (sender instanceof Player)
-		{
-			player = (Player) sender;
-		}
-		else
+		if(player == null)
 		{
 			sender.sendMessage(ChatColor.RED + "You must be a player to set a home!");
 			return true;

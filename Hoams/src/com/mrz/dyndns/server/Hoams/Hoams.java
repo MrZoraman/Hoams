@@ -113,9 +113,9 @@ public class Hoams extends JavaPlugin
 					if(CAN_RELOAD.verify(sender))
 						sender.sendMessage(ChatColor.DARK_AQUA + "/home reload " + ChatColor.GOLD + "-" + ChatColor.AQUA + " Reloads homes file");
 					
-					if(!(sender instanceof org.bukkit.entity.Player)) 
+					if(player == null) 
 					{
-						sender.sendMessage(ChatColor.RED + "NOTICE: You are not a player so the only command you can use is " + ChatColor.DARK_AQUA + "/home reload" + ChatColor.RED + "!");
+						sender.sendMessage(ChatColor.RED + "NOTICE: You are not a player so the only commands you can use are " + ChatColor.DARK_AQUA + "/home help" + ChatColor.RED  + " and " + ChatColor.DARK_AQUA + "/home reload" + ChatColor.RED + "!");
 					}
 				} 
 				else 
