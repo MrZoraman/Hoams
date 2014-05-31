@@ -32,7 +32,7 @@ public class GoHomeCommand implements CSBukkitCommand
 		{
 			if(CAN_GO_HOME.verify(sender))
 			{
-				HomeResult result = plugin.getHomeManager().loadHome(player.getName());
+				HomeResult result = plugin.getHomeManager().loadHome(player.getUniqueId());
 				switch(result.getLoadFailureType()) 
 				{
 				case NONE:
@@ -64,7 +64,7 @@ public class GoHomeCommand implements CSBukkitCommand
 			if(CAN_GO_TO_OTHERS_HOME.verify(sender))
 			{
 				String targetName = args[0];
-				HomeResult result = plugin.getHomeManager().loadHome(targetName);
+				HomeResult result = null;//TODO plugin.getHomeManager().loadHome(targetName);
 				switch(result.getLoadFailureType()) {
 				case NONE:
 					player.teleport(result.getHome());

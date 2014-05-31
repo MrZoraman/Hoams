@@ -32,7 +32,7 @@ public class SetHomeCommand implements CSBukkitCommand
 		{
 			if (CAN_SET_HOME.verify(sender))
 			{
-				plugin.getHomeManager().saveHome(player);
+				plugin.getHomeManager().saveHome(player.getUniqueId(), player.getLocation());
 				player.sendMessage(ChatColor.GREEN + "Home set!");
 				return true;
 			}
@@ -61,7 +61,7 @@ public class SetHomeCommand implements CSBukkitCommand
 								(target.getName().endsWith("s") ? "\'" : "'s") + ChatColor.RED + " home!");
 						return true;
 					}
-					plugin.getHomeManager().saveHome(target, player.getLocation());
+					plugin.getHomeManager().saveHome(target.getUniqueId(), player.getLocation());
 					player.sendMessage(ChatColor.GREEN + "Home for player '" + ChatColor.GOLD + args[0] + ChatColor.GREEN + "' set!");
 					target.sendMessage(ChatColor.GREEN + "Your home has been set!");
 					return true;

@@ -26,7 +26,7 @@ public class PlayerRespawnListener implements Listener
 		
 		if(WILL_RESPAWN_HOME.verify(player))
 		{
-			HomeResult result = homeManager.loadHome(player.getName());
+			HomeResult result = homeManager.loadHome(player.getUniqueId());
 			if(result.getLoadFailureType().equals(LoadFailureType.NONE))
 			{
 				event.setRespawnLocation(result.getHome());
