@@ -1,16 +1,12 @@
 package com.mrz.dyndns.server.Hoams;
 
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.mrz.dyndns.server.Hoams.commands.*;
+import com.mrz.dyndns.server.Hoams.listeners.PlayerRespawnListener;
 import com.mrz.dyndns.server.Hoams.management.HomeManager;
-import com.mrz.dyndns.server.Hoams.management.HomeResult;
-import com.mrz.dyndns.server.Hoams.management.LoadFailureType;
 import com.mrz.dyndns.server.Hoams.zorascommandsystem.bukkitcompat.BukkitCommandSystem;
-import static com.mrz.dyndns.server.Hoams.Permissions.*;
 
 public class Hoams extends JavaPlugin 
 {
@@ -68,23 +64,7 @@ public class Hoams extends JavaPlugin
 		
 		if(goHomeOnDeath) 
 		{
-			this.getServer().getPluginManager().registerEvents(new Listener() 
-			{
-				@EventHandler
-				public void onPlayerRespawn(PlayerRespawnEvent event) 
-				{
-					final org.bukkit.entity.Player player = event.getPlayer();
-					
-					if(WILL_RESPAWN_HOME.verify(player))
-					{
-						HomeResult result = homeManager.loadHome(player.getName());
-						if(result.getLoadFailureType().equals(LoadFailureType.NONE))
-						{
-							event.setRespawnLocation(result.getHome());
-						}
-					}
-				}
-			}, this);
+			this.getServer().getPluginManager().registerEvents(new PlayerRespawnListener(homeManager), this);
 		}
 	}
 }
