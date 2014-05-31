@@ -41,7 +41,6 @@ public class BukkitCommandSystem extends CommandSystem<CSBukkitCommand> implemen
 			catch (Exception e)
 			{
 				plugin.getLogger().severe("Failed to register command '" + cmdName + "'! Message to developer: Make sure that you have that command listed under your commands in your plugin.yml!");
-				plugin.getLogger().severe("(Or a conflict might be occurring...)");//TODO: yes?
 			}
 		}
 		
