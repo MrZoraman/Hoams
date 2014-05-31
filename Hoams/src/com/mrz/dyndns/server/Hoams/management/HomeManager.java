@@ -55,7 +55,12 @@ public class HomeManager
 			}
 			else
 			{
-				Location loc = getHome(playerUuid.toString(), world);
+				Location loc = new Location(world, 
+						plugin.getConfig().getDouble("Homes." + playerUuid + ".X"), 
+						plugin.getConfig().getDouble("Homes." + playerUuid + ".Y"), 
+						plugin.getConfig().getDouble("Homes." + playerUuid + ".Z"), 
+						(float) plugin.getConfig().getDouble("Homes." + playerUuid + ".Yaw"), 
+						(float) plugin.getConfig().getDouble("Homes." + playerUuid + ".Pitch"));
 				return new HomeResult(NONE, loc);
 			}
 		}
@@ -63,16 +68,6 @@ public class HomeManager
 		{
 			return new HomeResult(NO_HOME, null);
 		}
-	}
-	
-	private Location getHome(String key, World world)
-	{
-		return new Location(world, 
-				plugin.getConfig().getDouble("Homes." + key + ".X"), 
-				plugin.getConfig().getDouble("Homes." + key + ".Y"), 
-				plugin.getConfig().getDouble("Homes." + key + ".Z"), 
-				(float) plugin.getConfig().getDouble("Homes." + key + ".Yaw"), 
-				(float) plugin.getConfig().getDouble("Homes." + key + ".Pitch"));
 	}
 
 	public boolean homeExists(UUID playerUuid)
@@ -85,7 +80,17 @@ public class HomeManager
 		Set<String> keys = plugin.getConfig().getConfigurationSection("Homes").getKeys(false);
 		for(String key : keys)
 		{
-			System.out.println("found key: " + key + ", and is it a uuid?: " + isUuid(key));
+			if(!isUuid(key))
+			{
+				//time to convert!
+				String worldName = plugin.getConfig().getString("Homes." + key + ".World");
+				double x = plugin.getConfig().getDouble("Homes." + key + ".X");
+				double y = plugin.getConfig().getDouble("Homes." + key + ".Y");
+				double z = plugin.getConfig().getDouble("Homes." + key + ".Z");
+				double yaw = plugin.getConfig().getDouble("Homes." + key + ".Yaw");
+				double pitch = plugin.getConfig().getDouble("Homes." + key + ".Pitch");
+				
+			}
 		}
 	}
 	
