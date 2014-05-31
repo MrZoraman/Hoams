@@ -1,5 +1,6 @@
 package com.mrz.dyndns.server.Hoams.management;
 
+import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -72,5 +73,28 @@ public class HomeManager
 	public boolean homeExists(UUID playerUuid)
 	{
 		return plugin.getConfig().contains("Homes." + playerUuid.toString() + ".World");
+	}
+	
+	public void convertToUuids()
+	{
+		Set<String> keys = plugin.getConfig().getConfigurationSection("Homes").getKeys(false);
+		for(String key : keys)
+		{
+			System.out.println("found key: " + key + ", and is it a uuid?: " + isUuid(key));
+		}
+	}
+	
+	private static boolean isUuid(String uuidString)
+	{
+		try
+		{
+			UUID uuid = UUID.fromString(uuidString);
+			
+			return uuid.toString().equals(uuidString);
+		}
+		catch (Exception e)
+		{
+			return false;
+		}
 	}
 }
