@@ -55,12 +55,7 @@ public class HomeManager
 			}
 			else
 			{
-				Location loc = new Location(world, 
-						plugin.getConfig().getDouble("Homes." + playerUuid.toString() + ".X"), 
-						plugin.getConfig().getDouble("Homes." + playerUuid.toString() + ".Y"), 
-						plugin.getConfig().getDouble("Homes." + playerUuid.toString() + ".Z"), 
-						(float) plugin.getConfig().getDouble("Homes." + playerUuid.toString() + ".Yaw"), 
-						(float) plugin.getConfig().getDouble("Homes." + playerUuid.toString() + ".Pitch"));
+				Location loc = getHome(playerUuid.toString(), world);
 				return new HomeResult(NONE, loc);
 			}
 		}
@@ -68,6 +63,16 @@ public class HomeManager
 		{
 			return new HomeResult(NO_HOME, null);
 		}
+	}
+	
+	private Location getHome(String key, World world)
+	{
+		return new Location(world, 
+				plugin.getConfig().getDouble("Homes." + key + ".X"), 
+				plugin.getConfig().getDouble("Homes." + key + ".Y"), 
+				plugin.getConfig().getDouble("Homes." + key + ".Z"), 
+				(float) plugin.getConfig().getDouble("Homes." + key + ".Yaw"), 
+				(float) plugin.getConfig().getDouble("Homes." + key + ".Pitch"));
 	}
 
 	public boolean homeExists(UUID playerUuid)
