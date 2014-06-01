@@ -20,15 +20,17 @@ public class HomeManager
 {
 	public HomeManager(JavaPlugin plugin)
 	{
-		this.config = plugin.getConfig();
 		this.plugin = plugin;
 	}
 	
-	private final FileConfiguration config;
 	private final JavaPlugin plugin;
 
 	public void saveHome(UUID playerUuid, Location loc)
 	{
+		FileConfiguration config = plugin.getConfig();
+		
+		System.out.println("saving home with uuid " + playerUuid.toString());
+		System.out.println("set Homes." + playerUuid.toString() + ".Y to " + loc.getY());
 		config.set("Homes." + playerUuid.toString() + ".World", loc.getWorld().getName());
 		config.set("Homes." + playerUuid.toString() + ".X", loc.getX());
 		config.set("Homes." + playerUuid.toString() + ".Y", loc.getY());
@@ -40,6 +42,8 @@ public class HomeManager
 
 	public HomeResult loadHome(UUID playerUuid)
 	{
+		FileConfiguration config = plugin.getConfig();
+		
 		if (homeExists(playerUuid))
 		{
 			World world = Bukkit.getWorld(config.getString("Homes." + playerUuid.toString() + ".World"));
@@ -66,11 +70,13 @@ public class HomeManager
 
 	public boolean homeExists(UUID playerUuid)
 	{
-		return config.contains("Homes." + playerUuid.toString() + ".World");
+		return plugin.getConfig().contains("Homes." + playerUuid.toString() + ".World");
 	}
 	
 	public boolean convertToUuids()
 	{
+		FileConfiguration config = plugin.getConfig();
+		
 		class Home
 		{
 			String worldName;
