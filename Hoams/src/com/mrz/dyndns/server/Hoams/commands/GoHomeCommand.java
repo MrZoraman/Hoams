@@ -1,8 +1,11 @@
 package com.mrz.dyndns.server.Hoams.commands;
 
 import java.util.Arrays;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.Future;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -24,7 +27,7 @@ public class GoHomeCommand implements CSBukkitCommand
 	private final Hoams plugin;
 	
 	@Override
-	public boolean execute(CommandSender sender, Player player, String cmdName, String[] preArgs, String[] args)
+	public boolean execute(final CommandSender sender, final Player player, String cmdName, String[] preArgs, String[] args)
 	{
 		if(player == null)
 		{
@@ -67,47 +70,66 @@ public class GoHomeCommand implements CSBukkitCommand
 		{
 			if(CAN_GO_TO_OTHERS_HOME.verify(sender))
 			{
-				String targetName = args[0];
+				final String targetName = args[0];
 				
 				UUIDFetcher fetcher = new UUIDFetcher(Arrays.asList(args[0]));
-				UUID targetUuid = null;
-				try
-				{
-					targetUuid = fetcher.call().get(targetName);
-				}
-				catch (Exception e)
-				{
-					sender.sendMessage(ChatColor.RED + "Failed to retrieve uuid for player " + targetName);
-					return true;
-				}
+				final Future<Map<String, UUID>> f = Bukkit.getScheduler().callSyncMethod(plugin, fetcher);
 				
-				if(targetUuid == null)
+				Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable()
 				{
-					sender.sendMessage(ChatColor.RED + "Failed to find uuid for that player name! Perhaps they changed their name...");
-					return true;
-				}
-				
-				HomeResult result = plugin.getHomeManager().loadHome(targetUuid);
-				switch(result.getLoadFailureType()) {
-				case NONE:
-					player.teleport(result.getHome());
-					return true;
-				case NO_HOME:
-					player.sendMessage(ChatColor.GOLD + targetName + ChatColor.RED + " doesn't have a home set!");
-					if(CAN_SET_OTHERS_HOME.verify(sender))
+					@Override
+					public void run()
 					{
-						player.sendMessage(ChatColor.AQUA + "Use " + ChatColor.DARK_AQUA + "/home set " + targetName 
-								+ (plugin.getConfig().getBoolean("Use_Sethome") ? ChatColor.AQUA + "or " + ChatColor.DARK_AQUA + "/sethome " : "") + ChatColor.AQUA 
-								+ " to set " + ChatColor.GOLD + targetName + ChatColor.AQUA + "'s home.");
+						try
+						{
+							final UUID targetUuid = f.get().get(targetName);
+							
+							Bukkit.getScheduler().runTask(plugin, new Runnable()
+							{
+								@Override
+								public void run()
+								{
+									if(targetUuid == null)
+									{
+										sender.sendMessage(ChatColor.RED + "Failed to find uuid for that player name! Perhaps they changed their name...");
+										return;
+									}
+									
+									HomeResult result = plugin.getHomeManager().loadHome(targetUuid);
+									switch(result.getLoadFailureType()) {
+									case NONE:
+										player.teleport(result.getHome());
+										return;
+									case NO_HOME:
+										player.sendMessage(ChatColor.GOLD + targetName + ChatColor.RED + " doesn't have a home set!");
+										if(CAN_SET_OTHERS_HOME.verify(sender))
+										{
+											player.sendMessage(ChatColor.AQUA + "Use " + ChatColor.DARK_AQUA + "/home set " + targetName 
+													+ (plugin.getConfig().getBoolean("Use_Sethome") ? ChatColor.AQUA + "or " + ChatColor.DARK_AQUA + "/sethome " : "") + ChatColor.AQUA 
+													+ " to set " + ChatColor.GOLD + targetName + ChatColor.AQUA + "'s home.");
+										}
+										return;
+									case NO_MAP:
+										player.sendMessage(ChatColor.RED + "That world that " + ChatColor.GOLD + targetName + ChatColor.RED 
+												+ " has their home in either isn't loaded by the server or no longer exists :(");
+										return;
+									}
+								}
+							}); //end runnable
+						}
+						catch (Exception e)
+						{
+							Bukkit.getScheduler().runTask(plugin, new Runnable()
+							{
+								@Override
+								public void run()
+								{
+									sender.sendMessage(ChatColor.RED + "Failed to retrieve uuid for player " + targetName);
+								}
+							}); //end runnable
+						}
 					}
-					return true;
-				case NO_MAP:
-					player.sendMessage(ChatColor.RED + "That world that " + ChatColor.GOLD + targetName + ChatColor.RED 
-							+ " has their home in either isn't loaded by the server or no longer exists :(");
-					return true;
-				default:
-					return true;
-				}
+				});// end async
 			} 
 			else 
 			{
@@ -115,5 +137,7 @@ public class GoHomeCommand implements CSBukkitCommand
 				return true;
 			}
 		}
+		
+		return true;
 	}
 }
