@@ -27,19 +27,6 @@ public class HomeManager
 	private final FileConfiguration config;
 	private final JavaPlugin plugin;
 
-//	public void saveHome(Player player)
-//	{
-//		UUID playerUuid = player.getUniqueId();
-//		Location loc = player.getLocation();
-//		config.set("Homes." + playerUuid.toString() + ".World", loc.getWorld().getName());
-//		config.set("Homes." + playerUuid.toString() + ".X", loc.getX());
-//		config.set("Homes." + playerUuid.toString() + ".Y", loc.getY());
-//		config.set("Homes." + playerUuid.toString() + ".Z", loc.getZ());
-//		config.set("Homes." + playerUuid.toString() + ".Yaw", loc.getYaw());
-//		config.set("Homes." + playerUuid.toString() + ".Pitch", loc.getPitch());
-//		plugin.saveConfig();
-//	}
-
 	public void saveHome(UUID playerUuid, Location loc)
 	{
 		config.set("Homes." + playerUuid.toString() + ".World", loc.getWorld().getName());
