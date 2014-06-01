@@ -102,6 +102,7 @@ public class HomeManager
 				config.set("Homes." + key, null);
 				
 				
+				
 				plugin.saveConfig();
 			}
 		}
