@@ -95,15 +95,6 @@ public class HomeManager
 				home.pitch = config.getDouble("Homes." + key + ".Pitch");
 				
 				tempHomes.put(key, home);
-				
-				//delete bad entry
-				config.set("Homes." + key + ".World", null);
-				config.set("Homes." + key + ".X", null);
-				config.set("Homes." + key + ".Y", null);
-				config.set("Homes." + key + ".Z", null);
-				config.set("Homes." + key + ".Yaw", null);
-				config.set("Homes." + key + ".Pitch", null);
-				config.set("Homes." + key, null);
 			}
 		}
 		
@@ -126,6 +117,7 @@ public class HomeManager
 			for(Map.Entry<String, UUID> items : result.entrySet())
 			{
 				String uuidString = items.getValue().toString();
+				String name = items.getKey();
 				Home home = tempHomes.get(items.getKey());
 				
 				config.set("Homes." + uuidString + ".World", home.worldName);
@@ -134,6 +126,15 @@ public class HomeManager
 				config.set("Homes." + uuidString + ".Z", home.z);
 				config.set("Homes." + uuidString + ".Yaw", home.yaw);
 				config.set("Homes." + uuidString + ".Pitch", home.pitch);
+				
+				//delete bad entry
+				config.set("Homes." + name + ".World", null);
+				config.set("Homes." + name + ".X", null);
+				config.set("Homes." + name + ".Y", null);
+				config.set("Homes." + name + ".Z", null);
+				config.set("Homes." + name + ".Yaw", null);
+				config.set("Homes." + name + ".Pitch", null);
+				config.set("Homes." + name, null);
 				
 				plugin.saveConfig();
 			}
