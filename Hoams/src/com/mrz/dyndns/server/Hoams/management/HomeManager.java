@@ -28,9 +28,6 @@ public class HomeManager
 	public void saveHome(UUID playerUuid, Location loc)
 	{
 		FileConfiguration config = plugin.getConfig();
-		
-		System.out.println("saving home with uuid " + playerUuid.toString());
-		System.out.println("set Homes." + playerUuid.toString() + ".Y to " + loc.getY());
 		config.set("Homes." + playerUuid.toString() + ".World", loc.getWorld().getName());
 		config.set("Homes." + playerUuid.toString() + ".X", loc.getX());
 		config.set("Homes." + playerUuid.toString() + ".Y", loc.getY());
