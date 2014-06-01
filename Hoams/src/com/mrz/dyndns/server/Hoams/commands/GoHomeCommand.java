@@ -1,10 +1,14 @@
 package com.mrz.dyndns.server.Hoams.commands;
 
+import java.util.Arrays;
+import java.util.UUID;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.mrz.dyndns.server.Hoams.Hoams;
+import com.mrz.dyndns.server.Hoams.evilmidget38.UUIDFetcher;
 import com.mrz.dyndns.server.Hoams.management.HomeResult;
 import com.mrz.dyndns.server.Hoams.zorascommandsystem.bukkitcompat.CSBukkitCommand;
 
@@ -64,7 +68,26 @@ public class GoHomeCommand implements CSBukkitCommand
 			if(CAN_GO_TO_OTHERS_HOME.verify(sender))
 			{
 				String targetName = args[0];
-				HomeResult result = null;//TODO plugin.getHomeManager().loadHome(targetName);
+				
+				UUIDFetcher fetcher = new UUIDFetcher(Arrays.asList(args[0]));
+				UUID targetUuid = null;
+				try
+				{
+					targetUuid = fetcher.call().get(targetName);
+				}
+				catch (Exception e)
+				{
+					sender.sendMessage(ChatColor.RED + "Failed to retrieve uuid for player " + targetName);
+					return true;
+				}
+				
+				if(targetUuid == null)
+				{
+					sender.sendMessage(ChatColor.RED + "Failed to find uuid for that player name! Perhaps they changed their name...");
+					return true;
+				}
+				
+				HomeResult result = plugin.getHomeManager().loadHome(targetUuid);
 				switch(result.getLoadFailureType()) {
 				case NONE:
 					player.teleport(result.getHome());
