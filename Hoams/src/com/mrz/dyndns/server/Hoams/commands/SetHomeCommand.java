@@ -56,7 +56,7 @@ public class SetHomeCommand implements CSBukkitCommand
 				
 				UUIDFetcher fetcher = new UUIDFetcher(Arrays.asList(args[0]));
 				final Future<Map<String, UUID>> f = Bukkit.getScheduler().callSyncMethod(plugin, fetcher);
-				sender.sendMessage(ChatColor.YELLOW + "Starting teleport...");
+				sender.sendMessage(ChatColor.YELLOW + "Starting set home...");
 				
 				Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable()
 				{
