@@ -121,9 +121,6 @@ public class HomeManager
 				config.set("Homes." + key + ".Pitch", null);
 				config.set("Homes." + key, null);
 			}
-
-			System.out.println("config saved.");
-			plugin.saveConfig();
 		}
 		
 		if(!tempHomes.isEmpty())
@@ -158,6 +155,8 @@ public class HomeManager
 				config.set("Homes." + uuidString + ".Z", home.z);
 				config.set("Homes." + uuidString + ".Yaw", home.yaw);
 				config.set("Homes." + uuidString + ".Pitch", home.pitch);
+				
+				System.out.println("home saved.");
 			}
 			
 			System.out.println("saved config.");
