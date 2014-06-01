@@ -2,12 +2,18 @@ package com.mrz.dyndns.server.Hoams.commands;
 
 import static com.mrz.dyndns.server.Hoams.Permissions.*;
 
+import java.util.Arrays;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.Future;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.mrz.dyndns.server.Hoams.Hoams;
+import com.mrz.dyndns.server.Hoams.evilmidget38.UUIDFetcher;
 import com.mrz.dyndns.server.Hoams.zorascommandsystem.bukkitcompat.CSBukkitCommand;
 
 public class SetHomeCommand implements CSBukkitCommand
@@ -20,7 +26,7 @@ public class SetHomeCommand implements CSBukkitCommand
 	private final Hoams plugin;
 
 	@Override
-	public boolean execute(CommandSender sender, Player player, String cmdName, String[] preArgs, String[] args)
+	public boolean execute(final CommandSender sender, final Player player, String cmdName, String[] preArgs, String[] args)
 	{
 		if(player == null)
 		{
@@ -46,26 +52,68 @@ public class SetHomeCommand implements CSBukkitCommand
 		{
 			if (CAN_SET_OTHERS_HOME.verify(sender))
 			{
-				@SuppressWarnings("deprecation")//TODO
-				Player target = Bukkit.getPlayer(args[0]);
-				if (target == null)
+				final String targetName = args[0];
+				
+				UUIDFetcher fetcher = new UUIDFetcher(Arrays.asList(args[0]));
+				final Future<Map<String, UUID>> f = Bukkit.getScheduler().callSyncMethod(plugin, fetcher);
+				sender.sendMessage(ChatColor.YELLOW + "Starting teleport...");
+				
+				Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable()
 				{
-					player.sendMessage(ChatColor.RED + "Player '" + ChatColor.GOLD + args[0] + ChatColor.RED + "' is not online!");
-					return true;
-				}
-				else
-				{
-					if (IS_IMMUNE.verify(target) && !OVERRIDES.verify(sender))
+					@Override
+					public void run()
 					{
-						player.sendMessage(ChatColor.RED + "You are not allowed to set " + ChatColor.GOLD + target.getName() + 
-								(target.getName().endsWith("s") ? "\'" : "'s") + ChatColor.RED + " home!");
-						return true;
+						try
+						{
+							final UUID targetUuid = f.get().get(targetName);
+							
+							Bukkit.getScheduler().runTask(plugin, new Runnable()
+							{
+								@Override
+								public void run()
+								{
+									if(targetUuid == null)
+									{
+										sender.sendMessage(ChatColor.RED + "Failed to find uuid for that player name! Perhaps they changed their name...");
+										return;
+									}
+									
+									Player target = Bukkit.getPlayer(targetUuid);
+									
+									if (target == null)
+									{
+										player.sendMessage(ChatColor.RED + "Player '" + ChatColor.GOLD + targetName + ChatColor.RED + "' is not online!");
+										return;
+									}
+									else
+									{
+										if (IS_IMMUNE.verify(target) && !OVERRIDES.verify(sender))
+										{
+											player.sendMessage(ChatColor.RED + "You are not allowed to set " + ChatColor.GOLD + target.getName() + 
+													(target.getName().endsWith("s") ? "\'" : "'s") + ChatColor.RED + " home!");
+											return;
+										}
+										plugin.getHomeManager().saveHome(target.getUniqueId(), player.getLocation());
+										player.sendMessage(ChatColor.GREEN + "Home for player '" + ChatColor.GOLD + targetName + ChatColor.GREEN + "' set!");
+										target.sendMessage(ChatColor.GREEN + "Your home has been set!");
+										return;
+									}
+								}
+							});//end sync
+						}
+						catch (Exception e)
+						{
+							Bukkit.getScheduler().runTask(plugin, new Runnable()
+							{
+								@Override
+								public void run()
+								{
+									sender.sendMessage(ChatColor.RED + "Failed to retrieve uuid for player " + targetName);
+								}
+							}); //end sync
+						}
 					}
-					plugin.getHomeManager().saveHome(target.getUniqueId(), player.getLocation());
-					player.sendMessage(ChatColor.GREEN + "Home for player '" + ChatColor.GOLD + args[0] + ChatColor.GREEN + "' set!");
-					target.sendMessage(ChatColor.GREEN + "Your home has been set!");
-					return true;
-				}
+				});//end async
 			}
 			else
 			{
@@ -73,5 +121,7 @@ public class SetHomeCommand implements CSBukkitCommand
 				return true;
 			}
 		}
+		
+		return true;
 	}
 }
