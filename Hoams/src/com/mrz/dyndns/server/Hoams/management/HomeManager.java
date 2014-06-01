@@ -1,5 +1,6 @@
 package com.mrz.dyndns.server.Hoams.management;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -10,6 +11,8 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.mrz.dyndns.server.Hoams.evilmidget38.UUIDFetcher;
 
 import static com.mrz.dyndns.server.Hoams.management.LoadFailureType.*;
 
@@ -79,7 +82,7 @@ public class HomeManager
 		return config.contains("Homes." + playerUuid.toString() + ".World");
 	}
 	
-	public void convertToUuids()
+	public boolean convertToUuids()
 	{
 		class Home
 		{
@@ -122,9 +125,35 @@ public class HomeManager
 		if(!tempHomes.isEmpty())
 		{
 			plugin.getLogger().info("Converting to uuid system...");
+			UUIDFetcher fetcher = new UUIDFetcher(new ArrayList<String>(tempHomes.keySet()));
+			Map<String, UUID> result = null;
+			try
+			{
+				result = fetcher.call();
+			}
+			catch (Exception e)
+			{
+				plugin.getLogger().severe("Failed to convert to uuid system!");
+				e.printStackTrace();
+				return false;
+			}
+			
+			for(Map.Entry<String, UUID> items : result.entrySet())
+			{
+				String uuidString = items.getValue().toString();
+				Home home = tempHomes.get(items.getKey());
+				config.set("Homes." + uuidString + ".World", home.worldName);
+				config.set("Homes." + uuidString + ".X", home.x);
+				config.set("Homes." + uuidString + ".Y", home.y);
+				config.set("Homes." + uuidString + ".Z", home.z);
+				config.set("Homes." + uuidString + ".Yaw", home.yaw);
+				config.set("Homes." + uuidString + ".Pitch", home.pitch);
+			}
+			
+			plugin.saveConfig();
 		}
 		
-		
+		return true;
 	}
 	
 	private static boolean isUuid(String uuidString)
