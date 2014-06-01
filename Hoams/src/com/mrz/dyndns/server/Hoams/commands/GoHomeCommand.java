@@ -105,8 +105,8 @@ public class GoHomeCommand implements CSBukkitCommand
 										player.sendMessage(ChatColor.GOLD + targetName + ChatColor.RED + " doesn't have a home set!");
 										if(CAN_SET_OTHERS_HOME.verify(sender))
 										{
-											player.sendMessage(ChatColor.AQUA + "Use " + ChatColor.DARK_AQUA + "/home set " + targetName 
-													+ (plugin.getConfig().getBoolean("Use_Sethome") ? ChatColor.AQUA + "or " + ChatColor.DARK_AQUA + "/sethome " : "") + ChatColor.AQUA 
+											player.sendMessage(ChatColor.AQUA + "Use " + ChatColor.DARK_AQUA + "/home set " + ChatColor.GOLD + targetName + ChatColor.AQUA
+													+ (plugin.getConfig().getBoolean("Use_Sethome") ? ChatColor.AQUA + " or " + ChatColor.DARK_AQUA + "/sethome " + ChatColor.GOLD + targetName : "") + ChatColor.AQUA 
 													+ " to set " + ChatColor.GOLD + targetName + ChatColor.AQUA + "'s home.");
 										}
 										return;
