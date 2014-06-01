@@ -97,6 +97,7 @@ public class HomeManager
 		{
 			if(!isUuid(key))
 			{
+				System.out.println(key + " is not a uuid! Converting...");
 				//time to convert!
 				
 				Home home = new Home();
@@ -108,6 +109,8 @@ public class HomeManager
 				home.pitch = config.getDouble("Homes." + key + ".Pitch");
 				
 				tempHomes.put(key, home);
+				System.out.println("added " + key + "'s home to tempHomes.");
+				System.out.println("deleting home ...");
 				
 				//delete bad entry
 				config.set("Homes." + key + ".World", null);
@@ -119,17 +122,22 @@ public class HomeManager
 				config.set("Homes." + key, null);
 			}
 
+			System.out.println("config saved.");
 			plugin.saveConfig();
 		}
 		
 		if(!tempHomes.isEmpty())
 		{
+			System.out.println("homes are scheduled for re-writing...");
+			
 			plugin.getLogger().info("Converting to uuid system...");
 			UUIDFetcher fetcher = new UUIDFetcher(new ArrayList<String>(tempHomes.keySet()));
 			Map<String, UUID> result = null;
 			try
 			{
+				System.out.println("fetching uuids...");
 				result = fetcher.call();
+				System.out.println("uuids fetched.");
 			}
 			catch (Exception e)
 			{
@@ -142,6 +150,8 @@ public class HomeManager
 			{
 				String uuidString = items.getValue().toString();
 				Home home = tempHomes.get(items.getKey());
+				System.out.println("fetched home for " + items.getKey());
+				
 				config.set("Homes." + uuidString + ".World", home.worldName);
 				config.set("Homes." + uuidString + ".X", home.x);
 				config.set("Homes." + uuidString + ".Y", home.y);
@@ -150,6 +160,7 @@ public class HomeManager
 				config.set("Homes." + uuidString + ".Pitch", home.pitch);
 			}
 			
+			System.out.println("saved config.");
 			plugin.saveConfig();
 		}
 		
