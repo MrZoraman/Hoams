@@ -1,5 +1,7 @@
 package com.mrz.dyndns.server.Hoams.management;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -79,18 +81,30 @@ public class HomeManager
 	
 	public void convertToUuids()
 	{
+		class Home
+		{
+			String worldName;
+			double x, y, z, yaw, pitch;
+		}
+		
+		Map<String, Home> tempHomes = new HashMap<String, Home>();
+		
 		Set<String> keys = config.getConfigurationSection("Homes").getKeys(false);
 		for(String key : keys)
 		{
 			if(!isUuid(key))
 			{
 				//time to convert!
-				String worldName = config.getString("Homes." + key + ".World");
-				double x = config.getDouble("Homes." + key + ".X");
-				double y = config.getDouble("Homes." + key + ".Y");
-				double z = config.getDouble("Homes." + key + ".Z");
-				double yaw = config.getDouble("Homes." + key + ".Yaw");
-				double pitch = config.getDouble("Homes." + key + ".Pitch");
+				
+				Home home = new Home();
+				home.worldName = config.getString("Homes." + key + ".World");
+				home.x = config.getDouble("Homes." + key + ".X");
+				home.y = config.getDouble("Homes." + key + ".Y");
+				home.z = config.getDouble("Homes." + key + ".Z");
+				home.yaw = config.getDouble("Homes." + key + ".Yaw");
+				home.pitch = config.getDouble("Homes." + key + ".Pitch");
+				
+				tempHomes.put(key, home);
 				
 				//delete bad entry
 				config.set("Homes." + key + ".World", null);
@@ -100,12 +114,17 @@ public class HomeManager
 				config.set("Homes." + key + ".Yaw", null);
 				config.set("Homes." + key + ".Pitch", null);
 				config.set("Homes." + key, null);
-				
-				
-				
-				plugin.saveConfig();
 			}
+
+			plugin.saveConfig();
 		}
+		
+		if(!tempHomes.isEmpty())
+		{
+			plugin.getLogger().info("Converting to uuid system...");
+		}
+		
+		
 	}
 	
 	private static boolean isUuid(String uuidString)
