@@ -70,6 +70,10 @@ public class HomeManager
 		return plugin.getConfig().contains("Homes." + playerUuid.toString() + ".World");
 	}
 	
+	/**
+	 * Converts the data from the name system to the uuid system
+	 * @return True if all went well, False if otherwise.
+	 */
 	public boolean convertToUuids()
 	{
 		FileConfiguration config = plugin.getConfig();
@@ -81,6 +85,12 @@ public class HomeManager
 		}
 		
 		Map<String, Home> tempHomes = new HashMap<String, Home>();
+		
+		if(!config.contains("Homes"))
+		{
+			//no homes to convert
+			return true;
+		}
 		
 		Set<String> keys = config.getConfigurationSection("Homes").getKeys(false);
 		for(String key : keys)
