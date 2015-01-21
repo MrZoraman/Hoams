@@ -1,3 +1,4 @@
 Use_Sethome: true
 Go_home_on_death: true
+Only_print_homes: false
 Homes:

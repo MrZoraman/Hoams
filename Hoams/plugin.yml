@@ -1,5 +1,5 @@
 name: Hoams
-version: 3.0.1
+version: 3.0.4
 description: You want to go home? I gotcha.
 author: MrZoraman
 main: com.mrz.dyndns.server.Hoams.Hoams
@@ -14,31 +14,31 @@ commands:
     usage: /home help
 permissions:
   hoams.gohome:
-    default: op
+    default: true
     description: Allows one to go to their home
   hoams.sethome:
-    default: op
+    default: true
     description: Allows one to set their home
   hoams.reload:
     default: op
     description: Allows one to reload the hoams config file
   hoams.respawnhome:
-    default: op
+    default: true
     description: Allows one to respawn at their home if they die and it's enabled in the configuration
   hoams.set.self:
-    default: op
+    default: true
     description: Allows one to set their home
   hoams.set.other:
     default: op
     description: Allows one to set someone else's home
   hoams.gohome.self:
-    default: op
+    default: true
     description: Allows one to go to their home
   hoams.gohome.other:
     default: op
     description: Allows one to go to someone else's home
   hoams.help:
-    default: op
+    default: true
     description: Allows one to view the hoams help
   hoams.immune:
     default: op
@@ -47,7 +47,7 @@ permissions:
     default: op
     description: Players with this permission can set the homes of players with the hoams.immune permission
   hoams.user:
-    default: op
+    default: true
     description: Gives standard hoams permissions
     children:
       hoams.help: true

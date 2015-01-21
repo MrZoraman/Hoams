@@ -22,9 +22,11 @@ public class GoHomeCommand implements CSBukkitCommand
 	public GoHomeCommand(Hoams plugin) 
 	{
 		this.plugin = plugin;
+		this.onlyPrintHome = plugin.getConfig().getBoolean("Only_print_homes");
 	}
 	
 	private final Hoams plugin;
+	private final boolean onlyPrintHome;
 	
 	@Override
 	public boolean execute(final CommandSender sender, final Player player, String cmdName, String[] preArgs, String[] args)
@@ -43,7 +45,18 @@ public class GoHomeCommand implements CSBukkitCommand
 				switch(result.getLoadFailureType()) 
 				{
 				case NONE:
-					player.teleport(result.getHome());
+					if(onlyPrintHome)
+					{
+						int x = result.getHome().getBlockX();
+						int y = result.getHome().getBlockY();
+						int z = result.getHome().getBlockZ();
+						
+						player.sendMessage(ChatColor.DARK_AQUA + "Your home is at: " + ChatColor.GOLD + "" + x + ", " + y + ", " + z);
+					}
+					else
+					{
+						player.teleport(result.getHome());
+					}
 					return true;
 				case NO_HOME:
 					player.sendMessage(ChatColor.RED + "You don't have a home set!");
